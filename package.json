@@ -1,0 +1,45 @@
+{
+  "name": "stock-tweet",
+  "version": "1.0.0",
+  "description": "Feed of Tweets for Selected Stock Symbols",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/index.js",
+    "build": "Webpack --config webpack.config.js --display-error-details"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShlomoLove/stock-tweet.git"
+  },
+  "author": "Scott Nassau",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShlomoLove/stock-tweet/issues"
+  },
+  "homepage": "https://github.com/ShlomoLove/stock-tweet#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.9.14",
+    "axios": "^0.19.2",
+    "css-loader": "^3.5.3",
+    "dotenv": "^8.2.0",
+    "dotenv-webpack": "^1.8.0",
+    "express": "^4.17.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "^3.4.1",
+    "styled-components": "^5.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "file-loader": "^6.0.0",
+    "nodemon": "^2.0.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
