@@ -23,7 +23,7 @@ class MainPage extends Component {
 
   symbolAPICall = (stock) => {
     axios
-    .get(`localhost:3001/tweets/${stock}`)
+    .get(`/tweets/${stock}`)
     .then(({data}) => {
       console.log (data)
     })
