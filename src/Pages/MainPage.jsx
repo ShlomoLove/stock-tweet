@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 import InputForm from '../Components/Molecules/InputForm'
+import FeedContainer from '../Components/Organisms/FeedContainer'
 
 class MainPage extends Component {
   constructor () {
@@ -88,6 +89,7 @@ class MainPage extends Component {
           storeSymbols={this.storeSymbols} 
           onClickEvent={this.onClickEvent} 
         />
+        <FeedContainer/>
       </>
     )
   }
