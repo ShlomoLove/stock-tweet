@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
-import { TextField } from '@material-ui/core'
-import { Button } from '@material-ui/core'
+import InputForm from '../Components/Molecules/InputForm'
 
 class MainPage extends Component {
   constructor () {
@@ -10,7 +9,7 @@ class MainPage extends Component {
     this.state = {
       inputValue: '',
       subscribedSymbols: [],
-      calls: 0,
+      initiatedCall: false
     }
   }
 
@@ -20,22 +19,24 @@ class MainPage extends Component {
     let filteredSymbols = symbol.replace(/,/g, ' ')
     //create an array to accomodate multiple symbols and remove empty strings
     let symbolArray = filteredSymbols.toUpperCase().split(' ').filter(str => str.length > 0)
-    //update the state with on each change
+    //update the state on each change
     this.setState({ symbolSearch: symbolArray, inputValue: symbol })
   }
 
   onClickEvent = () => {
-    const { symbolSearch } = this.state
+    const { symbolSearch, initiatedCall } = this.state
     this.getSymbols ( symbolSearch )
     this.setState({ inputValue: '' })
-    setTimeout(this.intervalSymbolCall, 10000)
+    if (!initiatedCall) {
+      this.setState({ initiatedCall: true })
+      setTimeout(this.intervalSymbolCall, 45000)
+    }
   }
 
   intervalSymbolCall = () => {
     const { subscribedSymbols, calls } = this.state
-    console.log (calls)
     this.getSymbols(subscribedSymbols)
-    setTimeout(this.intervalSymbolCall, 30000)
+    setTimeout(this.intervalSymbolCall, 45000)
   }
 
   getSymbols = (symbols) => {
@@ -45,7 +46,7 @@ class MainPage extends Component {
   }
 
   symbolAPICall = (stock) => {
-    const { subscribedSymbols, calls } = this.state
+    const { subscribedSymbols } = this.state
     // API call routed through the server to by-pass CORS issue.
     axios
     .get(`/tweets/${stock}`)
@@ -69,12 +70,9 @@ class MainPage extends Component {
       if (!this.state[stock]) subscribedSymbols.push(stock)
       // concat the two arrays and set state
       let combinedMessages = [...newMessages, ...oldMessages]
-      let newCall = calls
-      newCall += 1
       this.setState({
         [stock]: { symbol:data.symbol, messages: combinedMessages },
         subscribedSymbols,
-        calls: newCall
       })
     })
     .catch (error => console.log('error', error)) 
@@ -84,10 +82,13 @@ class MainPage extends Component {
     const { inputValue } = this.state
     console.log (this.state)
     return (
-      <form>
-        <TextField id="filled-basic" label="Filled" value={ inputValue } variant="filled" onChange={(e) => this.storeSymbols(e.target.value)} />
-        <Button color={'primary'} variant="contained" onClick={() => this.onClickEvent()}>Submit</Button>
-      </form>
+      <>
+        <InputForm 
+          inputValue={inputValue} 
+          storeSymbols={this.storeSymbols} 
+          onClickEvent={this.onClickEvent} 
+        />
+      </>
     )
   }
 }
