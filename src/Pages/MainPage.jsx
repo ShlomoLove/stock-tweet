@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 import InputForm from '../Components/Molecules/InputForm'
-import FeedContainer from '../Components/Organisms/FeedContainer'
+import TweetFeed from '../Components/Organisms/TweetFeed'
 
 class MainPage extends Component {
   constructor () {
@@ -10,6 +10,7 @@ class MainPage extends Component {
     this.state = {
       inputValue: '',
       subscribedSymbols: [],
+      featuredFeed: {},
       initiatedCall: false
     }
   }
@@ -47,7 +48,7 @@ class MainPage extends Component {
   }
 
   symbolAPICall = (stock) => {
-    const { subscribedSymbols } = this.state
+    const { subscribedSymbols, featuredFeed } = this.state
     // API call routed through the server to by-pass CORS issue.
     axios
     .get(`/tweets/${stock}`)
@@ -72,15 +73,16 @@ class MainPage extends Component {
       // concat the two arrays and set state
       let combinedMessages = [...newMessages, ...oldMessages]
       this.setState({
-        [stock]: { symbol:data.symbol, messages: combinedMessages },
+        [stock]: { symbol:data.symbol, messages:combinedMessages },
         subscribedSymbols,
+        featuredFeed: { symbol:data.symbol, messages:combinedMessages }
       })
     })
     .catch (error => console.log('error', error)) 
   }
 
   render () {
-    const { inputValue } = this.state
+    const { inputValue, featuredFeed} = this.state
     console.log (this.state)
     return (
       <>
@@ -89,7 +91,9 @@ class MainPage extends Component {
           storeSymbols={this.storeSymbols} 
           onClickEvent={this.onClickEvent} 
         />
-        <FeedContainer/>
+        {featuredFeed.messages && (
+          <TweetFeed featuredFeed={featuredFeed}/>
+        )}
       </>
     )
   }
