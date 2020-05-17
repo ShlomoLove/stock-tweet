@@ -47,6 +47,26 @@ class MainPage extends Component {
     })
   }
 
+  sortTwoArrays = (main, newMessages ) => {
+    let mergedArray = []
+    let indexA, indexB, current = 0
+
+    while (current < (main.length + newMessages.length)) {
+      let isMainEmpty = indexA >= main.length
+      let isNewMessagesEmpty = indexB >= newMessages.length
+
+      if (!isNewMessagesEmpty && (isMainEmpty || newMessages[indexB][created_at] >= main[indexA][created_at])) {
+        mergedArray[current] = newMessages[indexB]
+        indexB += 1
+      } else {
+        mergedArray[current] = main[indexA]
+        indexA += 1
+      }
+      current += 1
+    }
+    return mergedArray
+  }
+
   symbolAPICall = (stock) => {
     const { subscribedSymbols, featuredFeed } = this.state
     // API call routed through the server to by-pass CORS issue.
