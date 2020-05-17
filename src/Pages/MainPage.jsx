@@ -10,6 +10,7 @@ class MainPage extends Component {
     this.state = {
       inputValue: '',
       subscribedSymbols: [],
+      mainMessages: [],
       featuredFeed: {},
       initiatedCall: false
     }
@@ -47,15 +48,18 @@ class MainPage extends Component {
     })
   }
 
-  sortTwoArrays = (main, newMessages ) => {
+  sortArrays = (main, newMessages ) => {
+    if (main.length < 1) return newMessages
+
     let mergedArray = []
-    let indexA, indexB, current = 0
+    let indexA = 0, indexB = 0, current = 0
 
     while (current < (main.length + newMessages.length)) {
       let isMainEmpty = indexA >= main.length
       let isNewMessagesEmpty = indexB >= newMessages.length
-
-      if (!isNewMessagesEmpty && (isMainEmpty || newMessages[indexB][created_at] >= main[indexA][created_at])) {
+      console.log (newMessages, indexA, 'newMessages')
+      console.log (main, indexB, 'main')
+      if (!isNewMessagesEmpty && (isMainEmpty || newMessages[indexB].created_at >= main[indexA].created_at)) {
         mergedArray[current] = newMessages[indexB]
         indexB += 1
       } else {
@@ -68,7 +72,7 @@ class MainPage extends Component {
   }
 
   symbolAPICall = (stock) => {
-    const { subscribedSymbols, featuredFeed } = this.state
+    const { subscribedSymbols, featuredFeed, mainMessages } = this.state
     // API call routed through the server to by-pass CORS issue.
     axios
     .get(`/tweets/${stock}`)
@@ -92,10 +96,12 @@ class MainPage extends Component {
       if (!this.state[stock]) subscribedSymbols.push(stock)
       // concat the two arrays and set state
       let combinedMessages = [...newMessages, ...oldMessages]
+      let newMain = this.sortArrays(mainMessages, combinedMessages)
       this.setState({
         [stock]: { symbol:data.symbol, messages:combinedMessages },
         subscribedSymbols,
-        featuredFeed: { symbol:data.symbol, messages:combinedMessages }
+        featuredFeed: { symbol:data.symbol, messages:combinedMessages },
+        mainMessages: newMain
       })
     })
     .catch (error => console.log('error', error)) 
