@@ -44,60 +44,41 @@ class MainPage extends Component {
   }
 
   getSymbols = (symbols) => {
-    const { subscribedSymbols } = this.state
+    const { subscribedSymbols, mainMessages } = this.state
+    const newStateObj = { }
+    const newMessages = [{messages: mainMessages}]
     axios
       .all(symbols.map(symbol => axios.get(`/tweets/${symbol}`)))
-      .then((responses) => {
-        console.log (responses)
+      .then(responses => {
+        responses.map(response => {
+          let stockSymbol = response.data.symbol.symbol
+          if (!this.state[stockSymbol]) {
+            newStateObj[stockSymbol] = {symbol: response.data.symbol, messages: response.data.messages}
+            newMessages.push({messages: response.data.messages})
+          }
       })
-      .catch(error => console.log('BEEEP', error))
-    // const getIndividualStock = async (req, res) => {
-//   console.log (req, 'this is stock')
-//   axios 
-//   .get(`https://api.stocktwits.com/api/2/streams/symbol/${req}.json`)
-//   .then(response => res.json(response))
-//   .catch(error => {
-//     return Promise.reject(error)
-//     // res.status(400).send(`error processing request: ${error}`)
-//   })
-// }
-
-// const mapThroughStocks = async (stocks) => {
-//   return Promise.all(stocks.map(stock => getIndividualStock(stock))) 
-// }
-
-// const getFeed = (req, res) => {
-  // const stocks = (JSON.parse(req.query.stockIds))
-  // mapThroughStocks(stocks)
-  // .then(data => {
-  //   console.log (data, 'at the end')
-  // })
-
-//   const stocks = (JSON.parse(req.query.stockIds))
-//   const promiseStocks = stocks.map(async stock => {
-//     axios
-//       .get(`https://api.stocktwits.com/api/2/streams/symbol/${stock}.json`)
-//       .then(data => res.json(data))
-//       .catch(error => res.status(400))
-//     })
-//     Promise.all()
-// };
-    // let newMain = this.sortArrays(mainMessages, combinedMessages)
-
-    // this.setState({
-    //   [stock]: { symbol:data.symbol, messages:combinedMessages },
-    //   subscribedSymbols,
-    //   featuredFeed: { symbol:data.symbol, messages:combinedMessages },
-    //   mainMessages: newMain
-    // })
+      const sortedMessages = this.sortMessages(newMessages)
+      this.setState(newStateObj)
+    })
+      .catch(error => console.log('error in api call', error))
   }
 
-  sortArrays = (main, newMessages ) => {
-    if (main.length < 1) return newMessages
+  sortMessages = (messages) => {
+    if (messages.length < 1) return
+    let mergedMessages = messages[0]
+    if (messages.length === 1) return mergedMessages
 
+    for (let i = 1; i < messages.length; i++) {
+    }
+
+
+    if (main.length < 1) return newMessages
     let mergedArray = []
     let indexA = 0, indexB = 0, current = 0
+  }
+    
 
+  sortArrays = (arrayA, arrayB) => {
     while (current < (main.length + newMessages.length)) {
       let isMainEmpty = indexA >= main.length
       let isNewMessagesEmpty = indexB >= newMessages.length
@@ -136,10 +117,8 @@ class MainPage extends Component {
         }
       }
       // concat the two arrays
-      console.log ('hello from CALL')
       let combinedMessages = [...newMessages, ...oldMessages]
       let symbolObject = { messages: combinedMessages, symbol: data.symbol }
-      console.log (symbolObject, 'SymbolObject')
       return symbolObject
     })
     .catch (error => console.log('error', error)) 
