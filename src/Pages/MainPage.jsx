@@ -29,23 +29,67 @@ class MainPage extends Component {
   onClickEvent = () => {
     const { symbolSearch, initiatedCall } = this.state
     this.getSymbols ( symbolSearch )
-    this.setState({ inputValue: '' })
     if (!initiatedCall) {
-      this.setState({ initiatedCall: true })
+      this.setState({ initiatedCall: true, inputValue: '' })
       setTimeout(this.intervalSymbolCall, 45000)
+    } else {
+      this.setState({inputValue: ''})
     }
   }
 
   intervalSymbolCall = () => {
-    const { subscribedSymbols, calls } = this.state
+    const { subscribedSymbols } = this.state
     this.getSymbols(subscribedSymbols)
     setTimeout(this.intervalSymbolCall, 45000)
   }
 
   getSymbols = (symbols) => {
-    symbols.map(stock => {
-      this.symbolAPICall(stock)
-    })
+    const { subscribedSymbols } = this.state
+    axios
+      .all(symbols.map(symbol => axios.get(`/tweets/${symbol}`)))
+      .then((responses) => {
+        console.log (responses)
+      })
+      .catch(error => console.log('BEEEP', error))
+    // const getIndividualStock = async (req, res) => {
+//   console.log (req, 'this is stock')
+//   axios 
+//   .get(`https://api.stocktwits.com/api/2/streams/symbol/${req}.json`)
+//   .then(response => res.json(response))
+//   .catch(error => {
+//     return Promise.reject(error)
+//     // res.status(400).send(`error processing request: ${error}`)
+//   })
+// }
+
+// const mapThroughStocks = async (stocks) => {
+//   return Promise.all(stocks.map(stock => getIndividualStock(stock))) 
+// }
+
+// const getFeed = (req, res) => {
+  // const stocks = (JSON.parse(req.query.stockIds))
+  // mapThroughStocks(stocks)
+  // .then(data => {
+  //   console.log (data, 'at the end')
+  // })
+
+//   const stocks = (JSON.parse(req.query.stockIds))
+//   const promiseStocks = stocks.map(async stock => {
+//     axios
+//       .get(`https://api.stocktwits.com/api/2/streams/symbol/${stock}.json`)
+//       .then(data => res.json(data))
+//       .catch(error => res.status(400))
+//     })
+//     Promise.all()
+// };
+    // let newMain = this.sortArrays(mainMessages, combinedMessages)
+
+    // this.setState({
+    //   [stock]: { symbol:data.symbol, messages:combinedMessages },
+    //   subscribedSymbols,
+    //   featuredFeed: { symbol:data.symbol, messages:combinedMessages },
+    //   mainMessages: newMain
+    // })
   }
 
   sortArrays = (main, newMessages ) => {
@@ -57,8 +101,6 @@ class MainPage extends Component {
     while (current < (main.length + newMessages.length)) {
       let isMainEmpty = indexA >= main.length
       let isNewMessagesEmpty = indexB >= newMessages.length
-      console.log (newMessages, indexA, 'newMessages')
-      console.log (main, indexB, 'main')
       if (!isNewMessagesEmpty && (isMainEmpty || newMessages[indexB].created_at >= main[indexA].created_at)) {
         mergedArray[current] = newMessages[indexB]
         indexB += 1
@@ -72,8 +114,8 @@ class MainPage extends Component {
   }
 
   symbolAPICall = (stock) => {
-    const { subscribedSymbols, featuredFeed, mainMessages } = this.state
-    // API call routed through the server to by-pass CORS issue.
+    const { featuredFeed, mainMessages } = this.state
+    // API call routed through the server to bypass CORS issue.
     axios
     .get(`/tweets/${stock}`)
     .then(({data}) => {
@@ -93,20 +135,17 @@ class MainPage extends Component {
           }
         }
       }
-      if (!this.state[stock]) subscribedSymbols.push(stock)
-      // concat the two arrays and set state
+      // concat the two arrays
+      console.log ('hello from CALL')
       let combinedMessages = [...newMessages, ...oldMessages]
-      let newMain = this.sortArrays(mainMessages, combinedMessages)
-      this.setState({
-        [stock]: { symbol:data.symbol, messages:combinedMessages },
-        subscribedSymbols,
-        featuredFeed: { symbol:data.symbol, messages:combinedMessages },
-        mainMessages: newMain
-      })
+      let symbolObject = { messages: combinedMessages, symbol: data.symbol }
+      console.log (symbolObject, 'SymbolObject')
+      return symbolObject
     })
     .catch (error => console.log('error', error)) 
   }
 
+  
   render () {
     const { inputValue, featuredFeed} = this.state
     console.log (this.state)
