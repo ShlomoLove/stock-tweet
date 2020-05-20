@@ -8,11 +8,11 @@ const MainContainer = styled.div `
 `
 
 const TweetFeed = props => {
-  const { featuredFeed } = props
+  const { messageFeed } = props
   return (
     <>
       <MainContainer>
-        {featuredFeed.messages.map((tweet, index) => (
+        {messageFeed.map((tweet, index) => (
           <Tweet 
             message={tweet.body} 
             key={tweet.id} 
