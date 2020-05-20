@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import styled from 'styled-components'
-import InputForm from '../Components/Molecules/InputForm'
+import StyledMainContainer from '../Components/Atoms/StyledMainContainer'
+import TopInstructions from '../Components/Organisms/TopInstructions'
+import ControlPanel from '../Components/Organisms/ControlPanel'
 import TweetFeed from '../Components/Organisms/TweetFeed'
-import FeedOptions from '../Components/Organisms/FeedOptions'
 
 class MainPage extends Component {
   constructor () {
@@ -127,26 +127,54 @@ class MainPage extends Component {
   setFeaturedFeed = (e) => {
     this.setState({ featuredFeed: e.target.value})
   }
+
+  deleteSymbol = (symbol) => {
+    const { subscribedSymbols, mainMessages } = this.state
+    const filteredSubscribedArray = subscribedSymbols.filter(stock => stock !== symbol)
+    const checkId = {}
+    for (let tweet of this.state[symbol]) {
+      checkId[tweet.id] = true
+    }
+    const filteredMainMessages = mainMessages.filter(tweet => !checkId[tweet.id])
+    const updatedFeaturedFeed = filteredSubscribedArray.length > 0 ? 'mainMessages' : ''
+    if (filteredSubscribedArray.length < 1) clearTimeout(this.intervalSymbolCall)
+    this.setState({featuredFeed: updatedFeaturedFeed, 
+      subscribedSymbols:filteredSubscribedArray, 
+      mainMessages: filteredMainMessages, 
+      [symbol]: null}) 
+  }
   
+  componentWillUnmount() {
+    clearTimeout(this.intervalSymbolCall)
+  }
+
   render () {
     const { inputValue, featuredFeed, subscribedSymbols, mainMessages } = this.state
     const messageFeed = featuredFeed ? this.state[featuredFeed] : null
+    let lengthObj = {}
+    for (let symbol of subscribedSymbols) {
+      lengthObj[symbol] = this.state[symbol].length
+    }
     console.log (this.state)
     return (
       <>
-        <InputForm 
-          inputValue={inputValue} 
-          storeSymbols={this.storeSymbols} 
-          onClickEvent={this.onClickEvent} 
-        />
-        <FeedOptions
-          subscribedSymbols={subscribedSymbols}
-          setFeaturedFeed={this.setFeaturedFeed }
-          featuredFeed={featuredFeed}
-        />
-        {messageFeed && (
-          <TweetFeed messageFeed={messageFeed}/>
-        )}
+        <StyledMainContainer>
+          <TopInstructions/>
+          <ControlPanel
+            inputValue={inputValue} 
+            storeSymbols={this.storeSymbols} 
+            onClickEvent={this.onClickEvent}
+            subscribedSymbols={subscribedSymbols}
+            setFeaturedFeed={this.setFeaturedFeed }
+            featuredFeed={featuredFeed}
+            deleteSymbol={this.deleteSymbol}
+            mainLength={mainMessages.length}
+            lengthObj={lengthObj}
+          />
+          {messageFeed && (
+            <TweetFeed messageFeed={messageFeed}/>
+            )} 
+        </StyledMainContainer>
       </>
     )
   }

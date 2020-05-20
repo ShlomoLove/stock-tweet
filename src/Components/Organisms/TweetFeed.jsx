@@ -12,6 +12,7 @@ const TweetFeed = props => {
   return (
     <>
       <MainContainer>
+        
         {messageFeed.map((tweet, index) => (
           <Tweet 
             message={tweet.body} 

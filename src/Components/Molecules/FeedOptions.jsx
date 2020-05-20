@@ -9,12 +9,12 @@ const FeedContainer = styled.div`
 `
 
 const FeedOptions = props => {
-  const { subscribedSymbols, setFeaturedFeed, featuredFeed } = props
+  const { subscribedSymbols, setFeaturedFeed, featuredFeed, deleteSymbol, lengthObj, mainLength } = props
   return (
     <>
     <FeedContainer>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Choose Feed</FormLabel>
+      <FormControl component="div">
+        <FormLabel component="label">Choose Feed</FormLabel>
         <RadioGroup 
           aria-label="symbols" 
           name="symbols" 
@@ -23,10 +23,10 @@ const FeedOptions = props => {
         >
           {subscribedSymbols.length > 0 && (
             <div>
-          <FormControlLabel value="mainMessages" control={<Radio />} label="All Messages" />
-            {subscribedSymbols.map(symbol => (
+          <FormControlLabel value="mainMessages" control={<Radio />} label="All Messages" /> {mainLength}            
+          {subscribedSymbols.map(symbol => (
               <div>
-                <FormControlLabel value={symbol} control={<Radio />} label={symbol}/> <DeleteForever color="secondary"/>
+                <FormControlLabel value={symbol} control={<Radio />} label={symbol}/> {lengthObj[symbol]} <DeleteForever onClick={()=> deleteSymbol(symbol)} color="secondary"/>
               </div>
             ))}
             </div>
