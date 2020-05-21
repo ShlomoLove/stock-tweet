@@ -16,7 +16,11 @@ const TweetContainer = styled.div`
 
 const StyledIcon = styled.img`
   margin-top: 3px;
-  border-radius: 50%; 
+  border-radius: 50%;
+  @media(max-width:450px) {
+    width: 28px;
+    height: auto;
+  } 
 `
 
 const TextContainer = styled.div`

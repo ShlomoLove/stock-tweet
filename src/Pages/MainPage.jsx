@@ -93,7 +93,6 @@ class MainPage extends Component {
         }
       })
       const newFeaturedFeed = featuredFeed ? featuredFeed : 'mainMessages'
-      console.log (newFeaturedFeed, 'newFeaturedFeed')
       const sortedMessages = this.sortMessages(updatedMainMessages)
       newStateObj.featuredFeed = newFeaturedFeed
       newStateObj.mainMessages = sortedMessages 
@@ -105,14 +104,13 @@ class MainPage extends Component {
   }
 
   sortMessages = (messages) => {
-    if (messages.length < 1) return
+    if (messages.length < 1) return []
     if (messages.length === 1) return messages[0]
     let mergedMessages = messages[0]
     for (let i = 1; i < messages.length; i++) {
       mergedMessages = this.sortArrays(mergedMessages, messages[i])
     }
     let duplicateCheckObj = {}
-    console.log (mergedMessages, 'before Check')
     for (let i = 0; i < mergedMessages.length; i++) {
       if (duplicateCheckObj[mergedMessages[i].id]) {
         mergedMessages.splice(i, 1)
@@ -121,7 +119,6 @@ class MainPage extends Component {
         duplicateCheckObj[mergedMessages[i].id] = true
       }
     }
-    console.log (mergedMessages, 'after Check')
     return mergedMessages
   }  
 
@@ -159,7 +156,6 @@ class MainPage extends Component {
     // concat the two arrays
     if (filteredNew.length !== undefined) {
       const combinedMessages = [...filteredNew, ...original]
-      console.log (combinedMessages, 'combinedMessages in CombinedMessages')
       return {filteredNew, combinedMessages}
     } else {
       return { filteredNew: null, combinedMessages: original }
@@ -170,19 +166,29 @@ class MainPage extends Component {
     this.setState({ featuredFeed: e.target.value})
   }
 
-  deleteSymbol = (symbol) => {
-    const { subscribedSymbols, mainMessages } = this.state
-    const filteredSubscribedArray = subscribedSymbols.filter(stock => stock !== symbol)
-    const checkId = {}
-    for (let tweet of this.state[symbol]) {
-      checkId[tweet.id] = true
+  recalibrateMainMessages = (updatedSymbols) => {
+    let calibratingMessages = []
+    for (let symbol of updatedSymbols) {
+      calibratingMessages.push(this.state[symbol])
     }
-    const filteredMainMessages = mainMessages.filter(tweet => !checkId[tweet.id])
-    const updatedFeaturedFeed = filteredSubscribedArray.length > 0 ? 'mainMessages' : ''
+    const newCalibratedMain = this.sortMessages(calibratingMessages)
+    return newCalibratedMain
+  }
+
+  deleteSymbol = (symbol) => {
+    const { subscribedSymbols, featuredFeed } = this.state
+    const filteredSubscribedArray = subscribedSymbols.filter(stock => stock !== symbol)
+    const filteredMainMessages = this.recalibrateMainMessages(filteredSubscribedArray)
+    let updatedFeaturedFeed = ''
+    if (filteredSubscribedArray.includes(featuredFeed)) {
+      updatedFeaturedFeed = featuredFeed
+    } else if(subscribedSymbols.length > 1) {
+      updatedFeaturedFeed = 'mainMessages'
+    }
     if (filteredSubscribedArray.length < 1) clearTimeout(this.intervalSymbolCall)
     const maxCheck = filteredSubscribedArray.length <= 5 ? false : true
     this.setState({featuredFeed: updatedFeaturedFeed, 
-      subscribedSymbols:filteredSubscribedArray, 
+      subscribedSymbols: filteredSubscribedArray, 
       mainMessages: filteredMainMessages,
       maxSymbols: maxCheck,
       [symbol]: null,
