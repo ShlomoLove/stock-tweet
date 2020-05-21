@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import { TextField } from '@material-ui/core'
 
 const StyledTextField = styled(TextField) `
-  width: 25vw; 
+  width: 28vw; 
+  background: snow; 
 `
 
 const SymbolTextField = props => {

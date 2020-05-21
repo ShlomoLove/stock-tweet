@@ -4,12 +4,11 @@ import SymbolTextField from '../Atoms/SymbolTextField'
 import SubmitButton from '../Atoms/SubmitButton'
 
 const StyledForm = styled.form`
-  width: 50%;
+  width: 100%;
   display: flex;
   flex-direction: row; 
   align-items: center;
-  justify-content: start;
-  margin-left: 1vw;   
+  justify-content: center;    
 `
 
 const InputForm = props => {

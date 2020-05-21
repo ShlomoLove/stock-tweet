@@ -3,8 +3,9 @@ import styled from 'styled-components'
 import Tweet from '../Molecules/Tweet'
 
 const MainContainer = styled.div `
-  border: solid blue; 
-  width: 100%; 
+  width: 100%;
+  max-width: 1100px;
+  background: rgba(176, 196, 222, .8); 
 `
 
 const TweetFeed = props => {
@@ -12,12 +13,14 @@ const TweetFeed = props => {
   return (
     <>
       <MainContainer>
-        
         {messageFeed.map((tweet, index) => (
           <Tweet 
             message={tweet.body} 
             key={tweet.id} 
-            time={tweet.created_at} 
+            time={tweet.created_at}
+            tweetSymbols={tweet.symbols}
+            user={tweet.user}
+            id={tweet.id}
           />
         ))}
       </MainContainer>

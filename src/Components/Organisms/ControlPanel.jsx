@@ -5,10 +5,12 @@ import InputForm from '../Molecules/InputForm'
 
 const ControlPanelContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  border: solid green;
+  flex-direction: column;
   width: 100%; 
-  max-width: 1100px; 
+  max-width: 1100px;
+  background: rgba(176, 196, 222, .8);
+  justify-content: center; 
+  align-items: center;  
 `
 
 const ControlPanel = props => {
