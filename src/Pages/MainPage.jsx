@@ -12,7 +12,11 @@ const StyledPrompt = styled.h4`
   font-family: 'Roboto', sans-serif;
   font-size: 1.8vw; 
   font-weight: 700;
-  color: tomato; 
+  color: tomato;
+  
+  @media(min-width: 1100px){
+    font-size: 20px; 
+  }
 `
 
 class MainPage extends Component {
@@ -34,21 +38,35 @@ class MainPage extends Component {
     axios
     .get('/trending/')
     .then(({data}) => {
-      this.setState({trending: data.symbols})
+      const trendingSymbols = data.symbols.slice(0,4)
+      this.setState({trending: trendingSymbols})
     })
     .catch(error => console.log('error in trending call', error))
   }
 
-  storeSymbols = (symbol) => {
-    const { subscribedSymbols } = this.state
+  storeSymbols = (e) => {
+    e.preventDefault();
+    const { subscribedSymbols, inputValue } = this.state
+    const symbol = e.key
+    let newSymbolValue = inputValue
+    if (symbol.length === 1) {
+      newSymbolValue = `${inputValue}${symbol}`
+    } 
+    if (symbol === 'Backspace') {
+      newSymbolValue = inputValue.slice(0, -1)
+    }
+    if (symbol === 'Enter') {
+      this.onClickEvent()
+      newSymbolValue = ''
+    }
     //initiate function on each change to decrease potential latency in onclick
     //remove the commas from each symbol to anticipate different user styles 
-    let filteredSymbols = symbol.replace(/,/g, ' ')
+    let filteredSymbols = newSymbolValue.replace(/,/g, ' ')
     //create an array to accomodate multiple symbols and remove empty strings
     let symbolArray = filteredSymbols.toUpperCase().split(' ').filter(str => str.length > 0)
     const maxCheck = (symbolArray.length + subscribedSymbols.length > 5) ? true : false
     //update the state on each change
-    this.setState({ symbolSearch: symbolArray, inputValue: symbol, startPrompt: false, maxSymbols: maxCheck, APIError: false })
+    this.setState({ symbolSearch: symbolArray, inputValue: newSymbolValue, startPrompt: false, maxSymbols: maxCheck, APIError: false })
   }
 
   onClickEvent = () => {
@@ -227,7 +245,7 @@ class MainPage extends Component {
           {APIError ? <StyledPrompt>Stock Twits does not recognize symbol, please try again</StyledPrompt> : null}
           <ControlPanel
             inputValue={inputValue} 
-            storeSymbols={this.storeSymbols} 
+            storeSymbols={this.storeSymbols}
             onClickEvent={this.onClickEvent}
             subscribedSymbols={subscribedSymbols}
             setFeaturedFeed={this.setFeaturedFeed }

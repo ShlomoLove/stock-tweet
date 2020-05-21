@@ -14,8 +14,8 @@ const SymbolTextField = props => {
       <StyledTextField 
         label="Enter Stock Symbols" 
         value={ inputValue } 
-        variant="filled" 
-        onChange={(e) => storeSymbols(e.target.value)}
+        variant="filled"
+        onKeyDown={(e)=> storeSymbols(e)}
       />
     </>
   )

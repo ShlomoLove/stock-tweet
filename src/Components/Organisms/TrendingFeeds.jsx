@@ -3,12 +3,11 @@ import styled from 'styled-components'
 
 const TrendingContainer = styled.div `
   display: grid; 
-  width: 96%;
+  width: 98%;
   max-width: 1100px;
   background: #F0F8FF;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   border: solid .25px grey;
-  margin: 5px; 
 `
 
 const StyledSymbols = styled.div`
@@ -27,18 +26,21 @@ const StyledName = styled.span `
 
 const TrendingTitle = styled.h4 `
   font-family: 'Roboto', sans-serif;
-  font-size: 4vw;
+  font-size: 2.5vw;
   font-weight: 400;
   color: #00008B;
   margin-top: 1vw; 
   margin-bottom: 1vw;
-`
 
+  @media(min-width: 1100px) {
+    font-size: 25px;
+  }
+`
 const TrendingFeeds = props => {
   const { trending } = props
   return (
     <>
-      <TrendingTitle>30 Trending Stock Twits Symbols</TrendingTitle>
+      <TrendingTitle>Some Trending Stock Symbols</TrendingTitle>
       <TrendingContainer>
         {trending && (
           trending.map(symbol=> (

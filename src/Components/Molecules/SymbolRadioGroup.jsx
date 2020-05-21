@@ -5,7 +5,10 @@ import { DeleteForever } from '@material-ui/icons'
 import { withStyles } from '@material-ui/core/styles';
 import { indigo } from '@material-ui/core/colors'
 
-const StyledDiv = styled.div``
+const StyledDiv = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`
 
 const FormEntryContainer = styled.div`
   display: flex;
@@ -14,7 +17,7 @@ const FormEntryContainer = styled.div`
   color: #191970;
   font-family: 'Roboto', sans-serif; 
   font-weight: 400; 
-  font-size: 17px; 
+  font-size: 17px;
 `
 
 const StyledRadio = withStyles({
@@ -28,7 +31,8 @@ const StyledRadio = withStyles({
 })((props) => <Radio color="default" {...props} />)
 
 const IconDiv = styled.div ` 
-  margin-left: 1.25vw; 
+  margin-left: .25vw;
+  margin-right: 2vw;  
 `
 
 const StyledFormLabel = styled(FormControlLabel)`
@@ -36,7 +40,7 @@ const StyledFormLabel = styled(FormControlLabel)`
   color: #191970; 
   font-style: italic;
   width: 150px;   
-`
+`  
 
 const SymbolRadioGroup = props => {
   const { subscribedSymbols,

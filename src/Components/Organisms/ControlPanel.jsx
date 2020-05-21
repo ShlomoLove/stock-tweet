@@ -22,7 +22,7 @@ const ControlPanel = props => {
         featuredFeed,
         deleteSymbol,
         mainLength,
-        lengthObj,
+        lengthObj
       } = props
   
   return (
