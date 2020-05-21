@@ -180,7 +180,7 @@ class MainPage extends Component {
     const filteredMainMessages = mainMessages.filter(tweet => !checkId[tweet.id])
     const updatedFeaturedFeed = filteredSubscribedArray.length > 0 ? 'mainMessages' : ''
     if (filteredSubscribedArray.length < 1) clearTimeout(this.intervalSymbolCall)
-    const maxCheck = filteredSubscribedArray <= 5 ? false : true
+    const maxCheck = filteredSubscribedArray.length <= 5 ? false : true
     this.setState({featuredFeed: updatedFeaturedFeed, 
       subscribedSymbols:filteredSubscribedArray, 
       mainMessages: filteredMainMessages,
