@@ -8,7 +8,8 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: row; 
   align-items: center;
-  justify-content: center;    
+  justify-content: center;
+  margin-top: 10px;     
 `
 
 const InputForm = props => {

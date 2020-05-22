@@ -4,7 +4,11 @@ import { TextField } from '@material-ui/core'
 
 const StyledTextField = styled(TextField) `
   width: 28vw; 
-  background: snow; 
+  background: snow;
+
+  @media(max-width: 500px) {
+    width: 220px  ; 
+  }
 `
 
 const SymbolTextField = props => {

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const TrendingContainer = styled.div `
   display: grid; 
-  width: 98%;
+  width: 96%;
   max-width: 1100px;
   background: #F0F8FF;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -15,6 +15,11 @@ const StyledSymbols = styled.div`
   font-size: 1.25vw;
   font-weight: 600; 
   color: #00008B;
+  text-align: center;
+
+  @media(max-width: 450px) {
+    font-size: 14px
+  }
 `
 
 const StyledName = styled.span `
@@ -22,6 +27,10 @@ const StyledName = styled.span `
   font-size: 1.15vw;
   font-weight: 200; 
   color: #00008B;
+
+  @media(max-width: 450px) {
+    font-size: 12px; 
+  }
 `
 
 const TrendingTitle = styled.h4 `

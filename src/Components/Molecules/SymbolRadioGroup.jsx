@@ -8,6 +8,11 @@ import { indigo } from '@material-ui/core/colors'
 const StyledDiv = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
+
+  @media(max-width: 650px) {
+    display: flex; 
+    flex-direction: column; 
+  }
 `
 
 const FormEntryContainer = styled.div`
